@@ -11,7 +11,7 @@ const (
 	port     = 5432
 	user     = "postgres"
 	password = "postgres"
-	dbname   = "airport"
+	dbname   = "demo"
 )
 
 func InitDatabase() *sql.DB {
@@ -22,7 +22,7 @@ func InitDatabase() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	//defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
