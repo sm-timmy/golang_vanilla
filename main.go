@@ -40,7 +40,10 @@ func main() {
 
 	// postgres search
 	conn := prepare.InitDatabase()
-	http.HandleFunc("/psearch", handlers.PostgresSearchHandler(conn))
+	http.HandleFunc("/psearch-fast", handlers.PostgresSearchHandler(conn))
+
+	// postgres search
+	http.HandleFunc("/psearch-slow", handlers.PostgresSearchHandlerSlow(conn))
 
 	addr := fmt.Sprintf("%s:%d", host, port)
 	fmt.Println("serving at " + addr)

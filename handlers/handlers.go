@@ -103,7 +103,37 @@ func PostgresSearchHandler(db *sql.DB) http.HandlerFunc {
 		start := time.Now()
 		var totalCycles uint
 
-		rows, err := db.Query("SELECT * FROM airports;")
+		rows, err := db.Query("select flight_id from flights WHERE flight_id=2880;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var title string
+			if err := rows.Scan(&title); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(title)
+		}
+		if err := rows.Err(); err != nil {
+			log.Fatal(err)
+		}
+
+		end := time.Now()
+
+		JSONResponse(w, TimingResponse{
+			WallTimeMSec: float64(end.Sub(start).Nanoseconds()) / nanosecToMillisec,
+			TotalCycles:  totalCycles,
+		})
+	}
+}
+
+func PostgresSearchHandlerSlow(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		var totalCycles uint
+
+		rows, err := db.Query("select flight_id from flights ORDER BY random() limit 1;")
 		if err != nil {
 			log.Fatal(err)
 		}
